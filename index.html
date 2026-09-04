@@ -34,10 +34,20 @@
   }
   .wrap{ max-width:560px; margin:0 auto; padding:18px 18px 110px; }
 
-  header{ padding:14px 4px 20px; border-bottom:1px solid var(--line); margin-bottom:20px; display:flex; align-items:center; gap:14px; }
+  header{ padding:14px 4px 20px; border-bottom:1px solid var(--line); margin-bottom:16px; display:flex; align-items:center; gap:14px; }
   header img{ width:44px; height:44px; border-radius:9px; }
   .title{ font-size:28px; letter-spacing:0.5px; color:var(--gold-bright); margin:0; font-weight:normal; }
   .subtitle{ font-family:var(--mono); font-size:13px; color:var(--text-dim); margin-top:5px; }
+
+  .tabs{ display:flex; gap:8px; margin-bottom:18px; }
+  .tab-btn{
+    flex:1; padding:11px; background:var(--panel); border:1px solid var(--line);
+    border-radius:6px; color:var(--text-dim); font-family:var(--mono); font-size:13px;
+    letter-spacing:0.5px; cursor:pointer;
+  }
+  .tab-btn.active{ background:var(--panel-2); border-color:var(--gold); color:var(--gold-bright); }
+  .tab-content{ display:none; }
+  .tab-content.active{ display:block; }
 
   .cash-panel{
     background: linear-gradient(180deg, var(--panel-2), var(--panel));
@@ -67,14 +77,14 @@
     transition: transform 0.06s ease, background 0.15s ease;
   }
   .vault-btn:active{ transform: scale(0.97); background:#1c2721; }
-  .vault-hint{ text-align:center; font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-bottom:26px; }
+  .vault-hint{ text-align:center; font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-bottom:10px; }
 
   .section-label{
     font-family:var(--mono); font-size:14px; color:var(--text-dim);
     margin: 28px 0 10px 2px; padding-bottom:8px; border-bottom:1px solid var(--line);
   }
 
-  .job{
+  .shop-item{
     background:var(--panel);
     border:1px solid var(--line);
     border-radius:6px;
@@ -85,17 +95,17 @@
     cursor:pointer;
     transition: border-color 0.15s ease;
   }
-  .job:active{ border-color: var(--gold); }
-  .job-info{ flex:1; }
-  .job-name{ font-size:18px; color:var(--text); }
-  .job-desc{ font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-top:4px; }
-  .job-stats{ font-family:var(--mono); font-size:12px; color:var(--safe); margin-top:4px; }
-  .job-buy{
+  .shop-item:active{ border-color: var(--gold); }
+  .item-info{ flex:1; }
+  .item-name{ font-size:18px; color:var(--text); }
+  .item-desc{ font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-top:4px; }
+  .item-stats{ font-family:var(--mono); font-size:12px; color:var(--safe); margin-top:4px; }
+  .item-buy{
     font-family:var(--mono); font-size:14px; color:var(--gold-bright);
     background:var(--panel-2); border:1px solid var(--line); border-radius:4px;
     padding:10px 14px; white-space:nowrap; min-width:92px; text-align:center;
   }
-  .job-buy.cant{ color:var(--text-dim); }
+  .item-buy.cant{ color:var(--text-dim); }
 
   .prestige-box{
     margin-top:28px;
@@ -113,6 +123,15 @@
   }
   .prestige-btn:disabled{ background:#3a2c28; color:#6b5c56; }
 
+  .deko-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  .swatch{
+    width:44px; height:44px; border-radius:50%; border:2px solid var(--line);
+    cursor:pointer; position:relative; flex-shrink:0;
+  }
+  .swatch.active{ border-color:#fff; }
+  .swatch.locked{ opacity:0.3; cursor:default; }
+  .swatch-lock{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:14px; }
+
   .log{
     margin-top:24px; font-family:var(--mono); font-size:12px; color:var(--text-dim);
     min-height:36px; line-height:1.7; opacity:0.85;
@@ -127,6 +146,41 @@
     0%{ opacity:1; transform: translateY(0); }
     100%{ opacity:0; transform: translateY(-46px); }
   }
+
+  .crew-empty{ font-family:var(--mono); font-size:13px; color:var(--text-dim); text-align:center; padding:40px 10px; line-height:1.7; }
+  .crew-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:6px;
+    padding:16px; margin-bottom:12px;
+  }
+  .crew-card-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+  .crew-card-name{ font-size:17px; }
+  .crew-card-count{ font-family:var(--mono); font-size:12px; color:var(--text-dim); }
+  .crew-bar-track{ height:8px; background:var(--panel-2); border-radius:4px; overflow:hidden; margin-bottom:8px; }
+  .crew-bar-fill{ height:100%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius:4px; animation: fillcycle linear infinite; }
+  @keyframes fillcycle{
+    0%{ width:0%; }
+    100%{ width:100%; }
+  }
+  .crew-card-out{ font-family:var(--mono); font-size:11px; color:var(--safe); }
+
+  .tutorial-overlay{
+    position:fixed; inset:0; background:rgba(6,9,8,0.92);
+    display:flex; align-items:center; justify-content:center;
+    z-index:100; padding:20px;
+  }
+  .tutorial-overlay.hidden{ display:none; }
+  .tutorial-box{
+    background:var(--panel); border:1px solid var(--gold); border-radius:8px;
+    padding:24px 22px; max-width:420px; max-height:85vh; overflow-y:auto;
+  }
+  .tutorial-box h2{ color:var(--gold-bright); font-size:22px; margin:0 0 14px; font-weight:normal; }
+  .tutorial-box p{ font-family:var(--mono); font-size:13px; line-height:1.7; color:var(--text); margin:0 0 12px; }
+  .tutorial-box p b{ color:var(--gold-bright); }
+  .tutorial-btn{
+    width:100%; margin-top:8px; padding:14px; background:var(--gold); border:none;
+    border-radius:5px; color:#161005; font-family:var(--mono); font-size:14px;
+    font-weight:bold; letter-spacing:0.5px; cursor:pointer;
+  }
 </style>
 </head>
 <body>
@@ -139,36 +193,65 @@
     </div>
   </header>
 
-  <div class="cash-panel">
-    <div class="cash-label">BEUTE</div>
-    <div class="cash-value" id="cashValue">CHF 0</div>
-    <div class="cash-rate" id="cashRate">+0 / Sek.</div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="shop">Werkstatt</button>
+    <button class="tab-btn" data-tab="crew">Crew</button>
   </div>
 
-  <div class="vault-btn" id="vaultBtn">TRESOR KNACKEN</div>
-  <div class="vault-hint">tippen für <span id="clickValueHint">CHF 1</span></div>
+  <div id="tab-shop" class="tab-content active">
+    <div class="cash-panel">
+      <div class="cash-label">BEUTE</div>
+      <div class="cash-value" id="cashValue">CHF 0</div>
+      <div class="cash-rate" id="cashRate">+0 / Sek.</div>
+    </div>
 
-  <div class="section-label">CREW ANHEUERN</div>
-  <div id="jobsList"></div>
+    <div class="vault-btn" id="vaultBtn">TRESOR KNACKEN</div>
+    <div class="vault-hint">tippen für <span id="clickValueHint">CHF 1</span></div>
 
-  <div class="prestige-box">
-    <div class="prestige-title">Frühpensionierung</div>
-    <div class="prestige-desc" id="prestigeDesc">Verschwinde mit dem, was du hast. Du verlierst die ganze Crew — aber der nächste Job läuft dauerhaft schneller.</div>
-    <button class="prestige-btn" id="prestigeBtn">NOCH NICHT GENUG BEUTE</button>
+    <div class="section-label">WERKZEUGE (mehr pro Klick)</div>
+    <div id="toolsList"></div>
+
+    <div class="section-label">CREW ANHEUERN (mehr pro Sekunde)</div>
+    <div id="jobsList"></div>
+
+    <div class="prestige-box">
+      <div class="prestige-title">Frühpensionierung</div>
+      <div class="prestige-desc" id="prestigeDesc"></div>
+      <button class="prestige-btn" id="prestigeBtn">NOCH NICHT GENUG BEUTE</button>
+      <div class="deko-row" id="dekoRow"></div>
+    </div>
+
+    <div class="log" id="log">Willkommen zurück. Die Nacht ist jung.</div>
   </div>
 
-  <div class="log" id="log">Willkommen zurück. Die Nacht ist jung.</div>
+  <div id="tab-crew" class="tab-content">
+    <div id="crewOverview"></div>
+  </div>
+</div>
+
+<div class="tutorial-overlay" id="tutorialOverlay">
+  <div class="tutorial-box">
+    <h2>Willkommen in der Nachtschicht</h2>
+    <p>Du übernimmst eine kleine Gaunertruppe. Ziel: so viel <b>Beute</b> wie möglich machen, bevor die Sonne aufgeht.</p>
+    <p><b>Tresor knacken</b> — tippen bringt dir direkt Cash pro Klick.</p>
+    <p><b>Werkzeuge</b> — machen jeden Klick wertvoller. Einmalig kaufen, für immer besser klicken.</p>
+    <p><b>Crew anheuern</b> — bringt dir Cash pro Sekunde, auch wenn du nicht klickst. Im Crew-Tab siehst du sie bei der Arbeit.</p>
+    <p><b>Frühpensionierung</b> — ab CHF 50K kannst du alles aufgeben und mit einem dauerhaften Multiplikator neu starten. Schaltet auch Deko-Farben frei.</p>
+    <button class="tutorial-btn" id="tutorialOk">Alles klar, los geht's</button>
+  </div>
 </div>
 
 <script>
 // ---------- Save/Load ----------
-const SAVE_KEY = 'nachtschicht_save_v1';
+const SAVE_KEY = 'nachtschicht_save_v2';
+const TUTORIAL_KEY = 'nachtschicht_tutorial_seen';
 
 // ---------- State ----------
 let cash = 0;
-let clickValue = 1;
+let baseClickValue = 1;
 let prestigeMult = 1;
 let prestigeCount = 0;
+let selectedTheme = 0;
 
 const jobs = [
   { id:'lookout', name:'Späher', desc:'hält Wache, meckert viel', baseCost:15, costMult:1.14, baseRate:0.2, owned:0 },
@@ -177,6 +260,21 @@ const jobs = [
   { id:'safecracker', name:'Schrankknacker', desc:'hört den Tresor förmlich atmen', baseCost:2200, costMult:1.17, baseRate:24, owned:0 },
   { id:'insider', name:'Insider bei der Bank', desc:'kündigt eh bald, egal was passiert', baseCost:12000, costMult:1.18, baseRate:120, owned:0 },
   { id:'boss', name:'Unterweltboss', desc:'redet in Metaphern, meint es aber ernst', baseCost:65000, costMult:1.19, baseRate:600, owned:0 },
+];
+
+const tools = [
+  { id:'brecheisen', name:'Brecheisen', desc:'öffnet mehr als nur Türen', baseCost:50, costMult:1.16, addClick:1, owned:0 },
+  { id:'bolzenschneider', name:'Bolzenschneider', desc:'schneidet durch Ausreden', baseCost:300, costMult:1.17, addClick:5, owned:0 },
+  { id:'thermallanze', name:'Thermallanze', desc:'zu laut, zu heiß, zu effektiv', baseCost:1800, costMult:1.18, addClick:22, owned:0 },
+  { id:'diamantbohrer', name:'Diamantbohrer', desc:'leise, teuer, gnadenlos', baseCost:9000, costMult:1.19, addClick:100, owned:0 },
+];
+
+const themes = [
+  { name:'Noir Gold', unlockAt:0, gold:'#c9a227', goldBright:'#e6bd3a', panel:'#16201c', panel2:'#1d2a24', bg:'#0c1210', safe:'#7fb069' },
+  { name:'Neon Nights', unlockAt:1, gold:'#3ac9d9', goldBright:'#6ee8f5', panel:'#151a24', panel2:'#1c2532', bg:'#0a0d13', safe:'#c96ee0' },
+  { name:'Blutmond', unlockAt:2, gold:'#c94a3a', goldBright:'#e86f52', panel:'#201414', panel2:'#2a1a1a', bg:'#100b0b', safe:'#d98c3d' },
+  { name:'Safirblau', unlockAt:3, gold:'#3a7fc9', goldBright:'#5ea3e8', panel:'#131a24', panel2:'#1a2432', bg:'#0a0e13', safe:'#7fb0c9' },
+  { name:'Dschungelgrün', unlockAt:4, gold:'#3ac967', goldBright:'#6ee88f', panel:'#141f16', panel2:'#1a281c', bg:'#0a120b', safe:'#c9c23a' },
 ];
 
 const logLines = [
@@ -192,7 +290,12 @@ const logLines = [
 
 function save(){
   try{
-    const data = { cash, prestigeMult, prestigeCount, jobs: jobs.map(j => j.owned), t: Date.now() };
+    const data = {
+      cash, prestigeMult, prestigeCount, selectedTheme,
+      jobs: jobs.map(j => j.owned),
+      tools: tools.map(t => t.owned),
+      t: Date.now()
+    };
     localStorage.setItem(SAVE_KEY, JSON.stringify(data));
   }catch(e){}
 }
@@ -205,9 +308,9 @@ function load(){
     cash = data.cash || 0;
     prestigeMult = data.prestigeMult || 1;
     prestigeCount = data.prestigeCount || 0;
-    if(Array.isArray(data.jobs)){
-      jobs.forEach((j, i) => { j.owned = data.jobs[i] || 0; });
-    }
+    selectedTheme = data.selectedTheme || 0;
+    if(Array.isArray(data.jobs)) jobs.forEach((j, i) => { j.owned = data.jobs[i] || 0; });
+    if(Array.isArray(data.tools)) tools.forEach((t, i) => { t.owned = data.tools[i] || 0; });
     if(data.t){
       const offlineSec = Math.min((Date.now() - data.t) / 1000, 3600 * 4);
       if(offlineSec > 5){
@@ -228,8 +331,16 @@ function fmt(n){
   return n.toFixed(n < 10 ? 2 : 1) + units[u];
 }
 
-function jobCost(job){
-  return Math.ceil(job.baseCost * Math.pow(job.costMult, job.owned));
+function fmtRate(n){
+  if(n >= 1000) return fmt(n);
+  if(n <= 0) return '0';
+  let s = n < 10 ? n.toFixed(2) : n.toFixed(1);
+  s = s.replace(/0+$/,'').replace(/\.$/,'');
+  return s;
+}
+
+function itemCost(item){
+  return Math.ceil(item.baseCost * Math.pow(item.costMult, item.owned));
 }
 
 function totalRate(){
@@ -238,41 +349,103 @@ function totalRate(){
   return r * prestigeMult;
 }
 
+function clickValue(){
+  let v = baseClickValue;
+  for(const t of tools) v += t.owned * t.addClick;
+  return v;
+}
+
 function effectiveClickValue(){
-  return clickValue * prestigeMult;
+  return clickValue() * prestigeMult;
 }
 
 function randomLog(){
   return logLines[Math.floor(Math.random()*logLines.length)];
 }
 
+// ---------- Theme ----------
+function applyTheme(idx){
+  const th = themes[idx] || themes[0];
+  const root = document.documentElement.style;
+  root.setProperty('--gold', th.gold);
+  root.setProperty('--gold-bright', th.goldBright);
+  root.setProperty('--panel', th.panel);
+  root.setProperty('--panel-2', th.panel2);
+  root.setProperty('--bg', th.bg);
+  root.setProperty('--safe', th.safe);
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', th.bg);
+}
+
+function renderDeko(){
+  dekoRowEl.innerHTML = '';
+  themes.forEach((th, i) => {
+    const unlocked = prestigeCount >= th.unlockAt;
+    const div = document.createElement('div');
+    div.className = 'swatch' + (i === selectedTheme ? ' active' : '') + (!unlocked ? ' locked' : '');
+    div.style.background = `linear-gradient(135deg, ${th.gold}, ${th.panel})`;
+    div.title = unlocked ? th.name : `${th.name} — ab ${th.unlockAt}x Frühpensionierung`;
+    if(!unlocked){
+      div.innerHTML = '<div class="swatch-lock">🔒</div>';
+    }
+    div.onclick = () => {
+      if(!unlocked) return;
+      selectedTheme = i;
+      applyTheme(i);
+      renderDeko();
+      save();
+    };
+    dekoRowEl.appendChild(div);
+  });
+}
+
 // ---------- Rendering ----------
 const cashValueEl = document.getElementById('cashValue');
 const cashRateEl = document.getElementById('cashRate');
 const jobsListEl = document.getElementById('jobsList');
+const toolsListEl = document.getElementById('toolsList');
 const clickValueHintEl = document.getElementById('clickValueHint');
 const prestigeBtn = document.getElementById('prestigeBtn');
 const prestigeDesc = document.getElementById('prestigeDesc');
+const dekoRowEl = document.getElementById('dekoRow');
 const logEl = document.getElementById('log');
+const crewOverviewEl = document.getElementById('crewOverview');
 
 function render(){
   cashValueEl.textContent = 'CHF ' + fmt(cash);
-  cashRateEl.textContent = '+' + fmt(totalRate()) + ' / Sek.';
-  clickValueHintEl.textContent = 'CHF ' + fmt(effectiveClickValue());
+  cashRateEl.textContent = '+' + fmtRate(totalRate()) + ' / Sek.';
+  clickValueHintEl.textContent = 'CHF ' + fmtRate(effectiveClickValue());
+
+  toolsListEl.innerHTML = '';
+  for(const tool of tools){
+    const cost = itemCost(tool);
+    const canAfford = cash >= cost;
+    const div = document.createElement('div');
+    div.className = 'shop-item';
+    div.innerHTML = `
+      <div class="item-info">
+        <div class="item-name">${tool.name} <span style="color:var(--text-dim); font-family:var(--mono); font-size:13px;">x${tool.owned}</span></div>
+        <div class="item-desc">${tool.desc}</div>
+        <div class="item-stats">+${fmtRate(tool.addClick)} pro Klick, pro Stück</div>
+      </div>
+      <div class="item-buy ${canAfford ? '' : 'cant'}">CHF ${fmt(cost)}</div>
+    `;
+    div.onclick = () => buyTool(tool);
+    toolsListEl.appendChild(div);
+  }
 
   jobsListEl.innerHTML = '';
   for(const job of jobs){
-    const cost = jobCost(job);
+    const cost = itemCost(job);
     const canAfford = cash >= cost;
     const div = document.createElement('div');
-    div.className = 'job';
+    div.className = 'shop-item';
     div.innerHTML = `
-      <div class="job-info">
-        <div class="job-name">${job.name} <span style="color:var(--text-dim); font-family:var(--mono); font-size:13px;">x${job.owned}</span></div>
-        <div class="job-desc">${job.desc}</div>
-        <div class="job-stats">+${fmt(job.baseRate * prestigeMult)}/s pro Person</div>
+      <div class="item-info">
+        <div class="item-name">${job.name} <span style="color:var(--text-dim); font-family:var(--mono); font-size:13px;">x${job.owned}</span></div>
+        <div class="item-desc">${job.desc}</div>
+        <div class="item-stats">+${fmtRate(job.baseRate * prestigeMult)}/s pro Person</div>
       </div>
-      <div class="job-buy ${canAfford ? '' : 'cant'}">CHF ${fmt(cost)}</div>
+      <div class="item-buy ${canAfford ? '' : 'cant'}">CHF ${fmt(cost)}</div>
     `;
     div.onclick = () => buyJob(job);
     jobsListEl.appendChild(div);
@@ -286,14 +459,53 @@ function render(){
     prestigeBtn.disabled = true;
     prestigeBtn.textContent = 'NOCH NICHT GENUG BEUTE (ab CHF 50K)';
   }
-  prestigeDesc.textContent = `Verschwinde mit dem, was du hast. Du verlierst die ganze Crew — aber alle künftigen Einnahmen werden dauerhaft x${prestigeMult.toFixed(2)} multipliziert. Bisher abgetaucht: ${prestigeCount}x.`;
+  prestigeDesc.textContent = `Verschwinde mit dem, was du hast. Du verlierst die ganze Crew und Werkzeuge — aber alle künftigen Einnahmen werden dauerhaft x${prestigeMult.toFixed(2)} multipliziert, und du schaltest neue Deko-Farben frei. Bisher abgetaucht: ${prestigeCount}x.`;
+
+  renderDeko();
+  renderCrewTab();
+}
+
+function renderCrewTab(){
+  const hired = jobs.filter(j => j.owned > 0);
+  if(hired.length === 0){
+    crewOverviewEl.innerHTML = '<div class="crew-empty">Noch niemand angeheuert.<br>Geh in die Werkstatt und stell deine erste Crew zusammen.</div>';
+    return;
+  }
+  crewOverviewEl.innerHTML = '';
+  for(const job of hired){
+    const rate = job.baseRate * prestigeMult;
+    const perPersonOutput = job.baseRate * prestigeMult;
+    const totalOutput = perPersonOutput * job.owned;
+    // faster rate = faster visual cycle, clamped for sanity
+    const duration = Math.max(0.5, Math.min(4, 3 / Math.sqrt(rate * job.owned + 0.2)));
+    const div = document.createElement('div');
+    div.className = 'crew-card';
+    div.innerHTML = `
+      <div class="crew-card-top">
+        <div class="crew-card-name">${job.name}</div>
+        <div class="crew-card-count">x${job.owned}</div>
+      </div>
+      <div class="crew-bar-track"><div class="crew-bar-fill" style="animation-duration:${duration}s"></div></div>
+      <div class="crew-card-out">+${fmtRate(totalOutput)}/s zusammen</div>
+    `;
+    crewOverviewEl.appendChild(div);
+  }
 }
 
 function buyJob(job){
-  const cost = jobCost(job);
+  const cost = itemCost(job);
   if(cash < cost) return;
   cash -= cost;
   job.owned++;
+  render();
+  save();
+}
+
+function buyTool(tool){
+  const cost = itemCost(tool);
+  if(cash < cost) return;
+  cash -= cost;
+  tool.owned++;
   render();
   save();
 }
@@ -305,7 +517,7 @@ vaultBtn.addEventListener('click', (e) => {
   const touch = e.touches && e.touches[0];
   const x = touch ? touch.clientX : e.clientX;
   const y = touch ? touch.clientY : e.clientY;
-  spawnFloat(x, y, '+' + fmt(effectiveClickValue()));
+  spawnFloat(x, y, '+' + fmtRate(effectiveClickValue()));
   render();
 });
 
@@ -327,10 +539,33 @@ prestigeBtn.addEventListener('click', () => {
   prestigeCount++;
   cash = 0;
   for(const j of jobs) j.owned = 0;
+  for(const t of tools) t.owned = 0;
   logEl.textContent = `Abgetaucht. Neues Leben, alter Multiplikator: x${prestigeMult.toFixed(2)}.`;
   render();
   save();
 });
+
+// ---------- Tabs ----------
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ---------- Tutorial ----------
+const tutorialOverlay = document.getElementById('tutorialOverlay');
+document.getElementById('tutorialOk').addEventListener('click', () => {
+  tutorialOverlay.classList.add('hidden');
+  try{ localStorage.setItem(TUTORIAL_KEY, '1'); }catch(e){}
+});
+function maybeShowTutorial(){
+  let seen = false;
+  try{ seen = localStorage.getItem(TUTORIAL_KEY) === '1'; }catch(e){}
+  if(seen) tutorialOverlay.classList.add('hidden');
+}
 
 // ---------- Passive income loop ----------
 let lastTick = Date.now();
@@ -356,7 +591,9 @@ setInterval(() => {
 
 // ---------- Init ----------
 load();
+applyTheme(selectedTheme);
 render();
+maybeShowTutorial();
 
 // ---------- PWA service worker ----------
 if('serviceWorker' in navigator){
