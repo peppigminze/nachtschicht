@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Nachtschicht — Idle Heist</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#0c1210">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+  :root{
+    --bg: #0c1210;
+    --panel: #16201c;
+    --panel-2: #1d2a24;
+    --line: #2a3a32;
+    --gold: #c9a227;
+    --gold-bright: #e6bd3a;
+    --safe: #7fb069;
+    --danger: #b5453f;
+    --text: #e8e3d3;
+    --text-dim: #93998f;
+    --mono: 'Courier New', Courier, monospace;
+  }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html,body{
+    margin:0; padding:0; background:var(--bg); color:var(--text);
+    font-family: Georgia, 'Times New Roman', serif;
+    min-height:100vh; overflow-x:hidden;
+    -webkit-user-select:none; user-select:none;
+  }
+  .wrap{ max-width:560px; margin:0 auto; padding:18px 18px 110px; }
+
+  header{ padding:14px 4px 20px; border-bottom:1px solid var(--line); margin-bottom:20px; display:flex; align-items:center; gap:14px; }
+  header img{ width:44px; height:44px; border-radius:9px; }
+  .title{ font-size:28px; letter-spacing:0.5px; color:var(--gold-bright); margin:0; font-weight:normal; }
+  .subtitle{ font-family:var(--mono); font-size:13px; color:var(--text-dim); margin-top:5px; }
+
+  .cash-panel{
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:26px 20px;
+    text-align:center;
+    margin-bottom:18px;
+  }
+  .cash-label{ font-family:var(--mono); font-size:13px; color:var(--text-dim); letter-spacing:1px; }
+  .cash-value{ font-family:var(--mono); font-size:52px; color:var(--gold-bright); margin:8px 0; font-weight:bold; line-height:1; }
+  .cash-rate{ font-family:var(--mono); font-size:15px; color:var(--safe); }
+
+  .vault-btn{
+    width:100%;
+    padding:40px 10px;
+    background: radial-gradient(circle at 50% 30%, #22302a, #141d19);
+    border:2px solid var(--gold);
+    border-radius:10px;
+    color:var(--gold-bright);
+    font-family:var(--mono);
+    font-size:20px;
+    letter-spacing:1.5px;
+    text-align:center;
+    margin-bottom:8px;
+    cursor:pointer;
+    transition: transform 0.06s ease, background 0.15s ease;
+  }
+  .vault-btn:active{ transform: scale(0.97); background:#1c2721; }
+  .vault-hint{ text-align:center; font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-bottom:26px; }
+
+  .section-label{
+    font-family:var(--mono); font-size:14px; color:var(--text-dim);
+    margin: 28px 0 10px 2px; padding-bottom:8px; border-bottom:1px solid var(--line);
+  }
+
+  .job{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:16px 16px;
+    margin-bottom:10px;
+    display:flex; justify-content:space-between; align-items:center;
+    gap:12px;
+    cursor:pointer;
+    transition: border-color 0.15s ease;
+  }
+  .job:active{ border-color: var(--gold); }
+  .job-info{ flex:1; }
+  .job-name{ font-size:18px; color:var(--text); }
+  .job-desc{ font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-top:4px; }
+  .job-stats{ font-family:var(--mono); font-size:12px; color:var(--safe); margin-top:4px; }
+  .job-buy{
+    font-family:var(--mono); font-size:14px; color:var(--gold-bright);
+    background:var(--panel-2); border:1px solid var(--line); border-radius:4px;
+    padding:10px 14px; white-space:nowrap; min-width:92px; text-align:center;
+  }
+  .job-buy.cant{ color:var(--text-dim); }
+
+  .prestige-box{
+    margin-top:28px;
+    background: linear-gradient(180deg, #241a14, #16110d);
+    border:1px solid var(--danger);
+    border-radius:6px;
+    padding:18px;
+  }
+  .prestige-title{ font-size:17px; color:#e0a898; margin-bottom:6px; }
+  .prestige-desc{ font-family:var(--mono); font-size:12px; color:var(--text-dim); line-height:1.6; margin-bottom:12px; }
+  .prestige-btn{
+    width:100%; padding:14px; background:var(--danger); border:none; border-radius:4px;
+    color:#fff0ec; font-family:var(--mono); font-size:14px; letter-spacing:0.5px;
+    cursor:pointer;
+  }
+  .prestige-btn:disabled{ background:#3a2c28; color:#6b5c56; }
+
+  .log{
+    margin-top:24px; font-family:var(--mono); font-size:12px; color:var(--text-dim);
+    min-height:36px; line-height:1.7; opacity:0.85;
+  }
+
+  .float{
+    position:fixed; pointer-events:none; font-family:var(--mono);
+    color:var(--gold-bright); font-size:17px; font-weight:bold;
+    animation: rise 0.8s ease-out forwards;
+  }
+  @keyframes rise{
+    0%{ opacity:1; transform: translateY(0); }
+    100%{ opacity:0; transform: translateY(-46px); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="icon-192.png" alt="">
+    <div>
+      <p class="title">Nachtschicht</p>
+      <p class="subtitle">eine ehrliche Nacht in einer unehrlichen Stadt</p>
+    </div>
+  </header>
+
+  <div class="cash-panel">
+    <div class="cash-label">BEUTE</div>
+    <div class="cash-value" id="cashValue">CHF 0</div>
+    <div class="cash-rate" id="cashRate">+0 / Sek.</div>
+  </div>
+
+  <div class="vault-btn" id="vaultBtn">TRESOR KNACKEN</div>
+  <div class="vault-hint">tippen für <span id="clickValueHint">CHF 1</span></div>
+
+  <div class="section-label">CREW ANHEUERN</div>
+  <div id="jobsList"></div>
+
+  <div class="prestige-box">
+    <div class="prestige-title">Frühpensionierung</div>
+    <div class="prestige-desc" id="prestigeDesc">Verschwinde mit dem, was du hast. Du verlierst die ganze Crew — aber der nächste Job läuft dauerhaft schneller.</div>
+    <button class="prestige-btn" id="prestigeBtn">NOCH NICHT GENUG BEUTE</button>
+  </div>
+
+  <div class="log" id="log">Willkommen zurück. Die Nacht ist jung.</div>
+</div>
+
+<script>
+// ---------- Save/Load ----------
+const SAVE_KEY = 'nachtschicht_save_v1';
+
+// ---------- State ----------
+let cash = 0;
+let clickValue = 1;
+let prestigeMult = 1;
+let prestigeCount = 0;
+
+const jobs = [
+  { id:'lookout', name:'Späher', desc:'hält Wache, meckert viel', baseCost:15, costMult:1.14, baseRate:0.2, owned:0 },
+  { id:'driver', name:'Fluchtfahrer', desc:'kennt jede Einbahnstraße falsch herum', baseCost:80, costMult:1.15, baseRate:1, owned:0 },
+  { id:'hacker', name:'Hacker', desc:'schläft tagsüber, isst nur Pizza', baseCost:400, costMult:1.16, baseRate:5, owned:0 },
+  { id:'safecracker', name:'Schrankknacker', desc:'hört den Tresor förmlich atmen', baseCost:2200, costMult:1.17, baseRate:24, owned:0 },
+  { id:'insider', name:'Insider bei der Bank', desc:'kündigt eh bald, egal was passiert', baseCost:12000, costMult:1.18, baseRate:120, owned:0 },
+  { id:'boss', name:'Unterweltboss', desc:'redet in Metaphern, meint es aber ernst', baseCost:65000, costMult:1.19, baseRate:600, owned:0 },
+];
+
+const logLines = [
+  "Der Nachtwächter war heute besonders unmotiviert.",
+  "Jemand hat die Alarmanlage mit Kaugummi verklebt. Klassiker.",
+  "Die Crew fragt schon wieder nach einer Gehaltserhöhung.",
+  "Ein Tresor mehr, ein Gewissen weniger.",
+  "Der Fluchtwagen sprang beim dritten Versuch an. Reicht.",
+  "Irgendwer hat den Code aufgeschrieben. Direkt neben den Tresor.",
+  "Die Polizei war da. Ist wieder gegangen. War wohl nichts.",
+  "Neue Regel: keine Selfies vor dem Tatort.",
+];
+
+function save(){
+  try{
+    const data = { cash, prestigeMult, prestigeCount, jobs: jobs.map(j => j.owned), t: Date.now() };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  }catch(e){}
+}
+
+function load(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    cash = data.cash || 0;
+    prestigeMult = data.prestigeMult || 1;
+    prestigeCount = data.prestigeCount || 0;
+    if(Array.isArray(data.jobs)){
+      jobs.forEach((j, i) => { j.owned = data.jobs[i] || 0; });
+    }
+    if(data.t){
+      const offlineSec = Math.min((Date.now() - data.t) / 1000, 3600 * 4);
+      if(offlineSec > 5){
+        const earned = totalRate() * offlineSec;
+        cash += earned;
+        logEl.textContent = `Während du weg warst: +CHF ${fmt(earned)} reingekommen. Läuft.`;
+      }
+    }
+  }catch(e){}
+}
+
+// ---------- Helpers ----------
+function fmt(n){
+  if(n < 1000) return Math.floor(n).toString();
+  const units = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi'];
+  let u = 0;
+  while(n >= 1000 && u < units.length-1){ n /= 1000; u++; }
+  return n.toFixed(n < 10 ? 2 : 1) + units[u];
+}
+
+function jobCost(job){
+  return Math.ceil(job.baseCost * Math.pow(job.costMult, job.owned));
+}
+
+function totalRate(){
+  let r = 0;
+  for(const j of jobs) r += j.owned * j.baseRate;
+  return r * prestigeMult;
+}
+
+function effectiveClickValue(){
+  return clickValue * prestigeMult;
+}
+
+function randomLog(){
+  return logLines[Math.floor(Math.random()*logLines.length)];
+}
+
+// ---------- Rendering ----------
+const cashValueEl = document.getElementById('cashValue');
+const cashRateEl = document.getElementById('cashRate');
+const jobsListEl = document.getElementById('jobsList');
+const clickValueHintEl = document.getElementById('clickValueHint');
+const prestigeBtn = document.getElementById('prestigeBtn');
+const prestigeDesc = document.getElementById('prestigeDesc');
+const logEl = document.getElementById('log');
+
+function render(){
+  cashValueEl.textContent = 'CHF ' + fmt(cash);
+  cashRateEl.textContent = '+' + fmt(totalRate()) + ' / Sek.';
+  clickValueHintEl.textContent = 'CHF ' + fmt(effectiveClickValue());
+
+  jobsListEl.innerHTML = '';
+  for(const job of jobs){
+    const cost = jobCost(job);
+    const canAfford = cash >= cost;
+    const div = document.createElement('div');
+    div.className = 'job';
+    div.innerHTML = `
+      <div class="job-info">
+        <div class="job-name">${job.name} <span style="color:var(--text-dim); font-family:var(--mono); font-size:13px;">x${job.owned}</span></div>
+        <div class="job-desc">${job.desc}</div>
+        <div class="job-stats">+${fmt(job.baseRate * prestigeMult)}/s pro Person</div>
+      </div>
+      <div class="job-buy ${canAfford ? '' : 'cant'}">CHF ${fmt(cost)}</div>
+    `;
+    div.onclick = () => buyJob(job);
+    jobsListEl.appendChild(div);
+  }
+
+  const nextPrestigeMult = 1 + Math.sqrt(cash / 50000) * 0.5;
+  if(cash >= 50000){
+    prestigeBtn.disabled = false;
+    prestigeBtn.textContent = 'ABTAUCHEN (x' + nextPrestigeMult.toFixed(2) + ' dauerhaft)';
+  } else {
+    prestigeBtn.disabled = true;
+    prestigeBtn.textContent = 'NOCH NICHT GENUG BEUTE (ab CHF 50K)';
+  }
+  prestigeDesc.textContent = `Verschwinde mit dem, was du hast. Du verlierst die ganze Crew — aber alle künftigen Einnahmen werden dauerhaft x${prestigeMult.toFixed(2)} multipliziert. Bisher abgetaucht: ${prestigeCount}x.`;
+}
+
+function buyJob(job){
+  const cost = jobCost(job);
+  if(cash < cost) return;
+  cash -= cost;
+  job.owned++;
+  render();
+  save();
+}
+
+// ---------- Click / vault ----------
+const vaultBtn = document.getElementById('vaultBtn');
+vaultBtn.addEventListener('click', (e) => {
+  cash += effectiveClickValue();
+  const touch = e.touches && e.touches[0];
+  const x = touch ? touch.clientX : e.clientX;
+  const y = touch ? touch.clientY : e.clientY;
+  spawnFloat(x, y, '+' + fmt(effectiveClickValue()));
+  render();
+});
+
+function spawnFloat(x, y, text){
+  const el = document.createElement('div');
+  el.className = 'float';
+  el.textContent = text;
+  el.style.left = (x - 20) + 'px';
+  el.style.top = (y - 20) + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+// ---------- Prestige ----------
+prestigeBtn.addEventListener('click', () => {
+  if(cash < 50000) return;
+  const gain = 1 + Math.sqrt(cash / 50000) * 0.5;
+  prestigeMult *= gain;
+  prestigeCount++;
+  cash = 0;
+  for(const j of jobs) j.owned = 0;
+  logEl.textContent = `Abgetaucht. Neues Leben, alter Multiplikator: x${prestigeMult.toFixed(2)}.`;
+  render();
+  save();
+});
+
+// ---------- Passive income loop ----------
+let lastTick = Date.now();
+setInterval(() => {
+  const now = Date.now();
+  const dt = (now - lastTick) / 1000;
+  lastTick = now;
+  cash += totalRate() * dt;
+  render();
+}, 200);
+
+// ---------- Autosave ----------
+setInterval(save, 5000);
+window.addEventListener('visibilitychange', () => { if(document.hidden) save(); });
+window.addEventListener('beforeunload', save);
+
+// ---------- Ambient log ----------
+setInterval(() => {
+  if(Math.random() < 0.6){
+    logEl.textContent = randomLog();
+  }
+}, 9000);
+
+// ---------- Init ----------
+load();
+render();
+
+// ---------- PWA service worker ----------
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
